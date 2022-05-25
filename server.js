@@ -18,7 +18,6 @@ const app = express();
 
 //MIDDLEWARE
 ////////////////////////////////////////////////////////////////////////////////////////////
-app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "build")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
