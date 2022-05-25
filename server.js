@@ -12,7 +12,6 @@ if (process.env.NODE_ENV === "production") {
     COOKIE_SESSION_SIGNATURE =
         require("./secrets.json").COOKIE_SESSION_SIGNATURE;
 }
-
 const express = require("express");
 const app = express();
 
