@@ -45,7 +45,7 @@ app.get("/api/user/me", async (req, res) => {
 //register
 app.post("/api/register", async (req, res) => {
     const registerInput = req.body;
-    console.log(registerInput);
+    console.log("CLIENT INPUT FOR REGISTRATION: ", registerInput);
     try {
         const newUser = await db.createUser(registerInput);
         req.session.user_id = newUser[0].id;

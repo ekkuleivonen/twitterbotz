@@ -24,13 +24,17 @@ const {
 } = require("../server-modules/credentials");
 
 const createUser = async (userInput) => {
-    const { username, email, password1 } = userInput;
-    const password_hash = await hashPassword(password1);
-    const newUser = await sql`
+    try {
+        const { username, email, password1 } = userInput;
+        const password_hash = await hashPassword(password1);
+        const newUser = await sql`
     INSERT INTO users
     (username, email, password_hash)
     VALUES (${username}, ${email}, ${password_hash}) RETURNING *`;
-    return newUser;
+        return newUser;
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 const loginUser = async (loginInput) => {
