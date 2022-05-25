@@ -1,8 +1,4 @@
 const { TwitterApi } = require("twitter-api-v2");
-const {
-    TWITTER_CLIENT_ID,
-    TWITTER_CLIENT_SECRET,
-} = require("../../secrets.json");
 
 const getTweetsByTwitterId = async (twitter_id, access_token) => {
     try {

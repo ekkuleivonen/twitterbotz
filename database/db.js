@@ -1,15 +1,21 @@
 const postgres = require("postgres");
-const {
-    DATABASE_USERNAME,
-    DATABASE_PASSWORD,
-    DATABASE_NAME,
-} = require("../secrets.json");
-const sql = postgres({
-    port: 5432,
-    database: DATABASE_NAME,
-    username: DATABASE_USERNAME,
-    password: DATABASE_PASSWORD,
-});
+let sql;
+
+if (process.env.NODE_ENV === "production") {
+    sql = postgres(process.env.DATABASE_URL);
+} else {
+    const {
+        DATABASE_USERNAME,
+        DATABASE_PASSWORD,
+        DATABASE_NAME,
+    } = require("../secrets.json");
+    sql = postgres({
+        port: 5432,
+        database: DATABASE_NAME,
+        username: DATABASE_USERNAME,
+        password: DATABASE_PASSWORD,
+    });
+}
 
 //USER
 const {

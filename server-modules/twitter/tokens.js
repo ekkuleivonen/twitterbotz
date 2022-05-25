@@ -1,8 +1,13 @@
 const { TwitterApi } = require("twitter-api-v2");
-const {
-    TWITTER_CLIENT_ID,
-    TWITTER_CLIENT_SECRET,
-} = require("../../secrets.json");
+let TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET;
+
+if (process.env.NODE_ENV === "production") {
+    TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT;
+    TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
+} else {
+    TWITTER_CLIENT_ID = require("../../secrets.json").TWITTER_CLIENT_ID;
+    TWITTER_CLIENT_SECRET = require("../../secrets.json").TWITTER_CLIENT_SECRET;
+}
 
 const CALLBACK_URL = "http://www.localhost:3001/auth/twitter/callback";
 const client = new TwitterApi({
@@ -53,10 +58,10 @@ module.exports.getAccessToken = async (
     });
 
     if (!codeVerifier || !state || !sessionState || !code) {
-        throw "User denied the app or session expired!";
+        console.log("User denied the app or session expired!");
     }
     if (state !== sessionState) {
-        throw "Stored tokens didnt match!";
+        console.log("Stored tokens didnt match!");
     }
 
     return client
@@ -81,6 +86,6 @@ module.exports.getAccessToken = async (
             }
         )
         .catch(() => {
-            throw "Invalid verifier or access tokens!";
+            console.log("Invalid verifier or access tokens!");
         });
 };
