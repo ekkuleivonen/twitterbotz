@@ -6,22 +6,28 @@ import Welcome from "./pages/welcome/welcome";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const requireLogin = async () => {
-    const cookieSession = await fetch("/api/user/me");
-    const { isLoggedIn, user } = await cookieSession.json();
+root.render(
+    <React.StrictMode>
+        <Welcome />
+    </React.StrictMode>
+);
 
-    if (!isLoggedIn) {
-        return root.render(
-            <React.StrictMode>
-                <Welcome />
-            </React.StrictMode>
-        );
-    }
+// const requireLogin = async () => {
+//     const cookieSession = await fetch("/api/user/me");
+//     const { isLoggedIn, user } = await cookieSession.json();
 
-    root.render(
-        <React.StrictMode>
-            <App user={user} />
-        </React.StrictMode>
-    );
-};
-requireLogin();
+//     if (!isLoggedIn) {
+//         return root.render(
+//             <React.StrictMode>
+//                 <Welcome />
+//             </React.StrictMode>
+//         );
+//     }
+
+//     root.render(
+//         <React.StrictMode>
+//             <App user={user} />
+//         </React.StrictMode>
+//     );
+// };
+// requireLogin();
