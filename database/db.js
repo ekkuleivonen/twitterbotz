@@ -2,6 +2,7 @@ const postgres = require("postgres");
 let sql;
 
 if (process.env.NODE_ENV === "production") {
+    console.log("DB_URL", process.env.DATABASE_URL);
     sql = postgres(process.env.DATABASE_URL);
 } else {
     const {
@@ -9,12 +10,9 @@ if (process.env.NODE_ENV === "production") {
         DATABASE_PASSWORD,
         DATABASE_NAME,
     } = require("../secrets.json");
-    sql = postgres({
-        port: 5432,
-        database: DATABASE_NAME,
-        username: DATABASE_USERNAME,
-        password: DATABASE_PASSWORD,
-    });
+    sql = postgres(
+        `postgres://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@localhost:${5432}/${DATABASE_NAME}`
+    );
 }
 
 //USER
@@ -33,7 +31,7 @@ const createUser = async (userInput) => {
     VALUES (${username}, ${email}, ${password_hash}) RETURNING *`;
         return newUser;
     } catch (error) {
-        console.log(error);
+        // console.(error);
     }
 };
 
