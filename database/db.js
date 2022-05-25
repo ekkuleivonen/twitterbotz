@@ -31,7 +31,7 @@ const createUser = async (userInput) => {
     VALUES (${username}, ${email}, ${password_hash}) RETURNING *`;
         return newUser;
     } catch (error) {
-        // console.(error);
+        console.log(error);
     }
 };
 

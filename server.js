@@ -54,6 +54,7 @@ app.post("/api/register", async (req, res) => {
         if (error.code === "23505") {
             res.json({ success: false, error: error.code });
         }
+        console.log(error);
     }
 });
 //log in new user
