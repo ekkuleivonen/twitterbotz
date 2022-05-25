@@ -204,7 +204,7 @@ app.post("/api/tweet-now", async (req, res) => {
 //get tweets
 app.get("/user/tweets/:pagination", async (req, res) => {
     const user_id = req.session.user_id;
-    const pagination = req.params.pagination;
+    //const pagination = req.params.pagination;
 
     //get twitter client
     const { twitter_id, access_token } = await db.getTwitterClientByUserId(
