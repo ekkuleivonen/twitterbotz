@@ -228,7 +228,7 @@ app.get("/user/tweets/:pagination", async (req, res) => {
     //return JSON
 });
 
-app.get("*", function (req, res) {
+app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
