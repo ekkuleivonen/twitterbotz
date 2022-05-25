@@ -2,9 +2,16 @@ const path = require("path");
 const db = require("./database/db");
 const token = require("./server-modules/twitter/tokens.js");
 const cookieSession = require("cookie-session");
-const { COOKIE_SESSION_SIGNATURE } = require("./secrets.json");
 const twitter = require("./server-modules/twitter/twitter-api.js");
 const { TwitterApi } = require("twitter-api-v2");
+
+let COOKIE_SESSION_SIGNATURE;
+if (process.env.NODE_ENV === "production") {
+    COOKIE_SESSION_SIGNATURE = process.env.COOKIE_SESSION_SIGNATURE;
+} else {
+    COOKIE_SESSION_SIGNATURE =
+        require("./secrets.json").COOKIE_SESSION_SIGNATURE;
+}
 
 const express = require("express");
 const app = express();
