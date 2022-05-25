@@ -2,7 +2,7 @@ const postgres = require("postgres");
 let sql;
 
 if (process.env.NODE_ENV === "production") {
-    console.log("DB_URL", process.env.DATABASE_URL);
+    console.log("DB_URL", process.env.DATABASE_URL + "?sslmode=require");
     sql = postgres(process.env.DATABASE_URL);
 } else {
     const {
