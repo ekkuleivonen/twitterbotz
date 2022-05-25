@@ -1,0 +1,72 @@
+/* LOGIN-FORM COMPONENT */
+.component-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 40%;
+    min-width: 20em;
+    align-items: center;
+}
+
+.text-input-field {
+    min-width: 28em;
+    border-radius: 0.625em;
+    appearance: none;
+    outline: none;
+    border: solid 1px #57abdb82;
+    box-shadow: 0px 0px 35px rgba(0, 0, 0, 0.1);
+    margin: 0.65em;
+    padding: 1em;
+    height: 3em;
+}
+
+.text-input-field.error {
+    border: 2px solid #db6757;
+    animation: shake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    transform: translate3d(0, 0, 0);
+    perspective: 1000px;
+}
+
+.login-form button {
+    padding: 0.5em 1em 0.5em 1em;
+    max-width: 8em;
+    background: #57abdb;
+    border-radius: 6px;
+    color: white;
+    font-size: 1em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    border: none;
+}
+
+@keyframes shake {
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+/***************************************************/
