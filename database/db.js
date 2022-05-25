@@ -2,11 +2,8 @@ const postgres = require("postgres");
 let sql;
 
 if (process.env.NODE_ENV === "production") {
-    console.log(
-        "DB_URL",
-        process.env.DATABASE_URL + "?rejectUnauthorized=false"
-    );
-    sql = postgres(process.env.DATABASE_URL);
+    console.log("DB_URL", process.env.DATABASE_URL);
+    sql = postgres(process.env.DATABASE_URL + "?sslmode=require");
 } else {
     const {
         DATABASE_USERNAME,
