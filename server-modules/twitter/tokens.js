@@ -2,7 +2,7 @@ const { TwitterApi } = require("twitter-api-v2");
 let TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET;
 
 if (process.env.NODE_ENV === "production") {
-    TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT;
+    TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
     TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
 } else {
     TWITTER_CLIENT_ID = require("../../secrets.json").TWITTER_CLIENT_ID;
