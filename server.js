@@ -114,7 +114,7 @@ app.get("/auth/twitter/callback", async (req, res) => {
     const storedClient = await db.storeTwitterClient(loggedClient, user_id);
     if (!storedClient)
         return res.json({ error: "failed to connect to twitter" });
-    return res.redirect("http://localhost:3000/");
+    return res.redirect("/");
 });
 //TODO: token refresh
 //twitter client of user
