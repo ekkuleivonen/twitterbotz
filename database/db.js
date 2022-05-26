@@ -170,8 +170,6 @@ const storeTwitterClient = async (loggedClient, user_id) => {
             refresh_token,
             expires_in,
         } = loggedClient;
-        console.table(typeof twitter_id);
-        console.log(user_id);
         const storedClient = await sql`
             INSERT INTO twitter_clients
             (twitter_username, twitter_id, access_token, refresh_token, expires_in, user_id)

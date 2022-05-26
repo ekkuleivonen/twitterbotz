@@ -112,6 +112,7 @@ app.get("/auth/twitter/callback", async (req, res) => {
     console.log("final client", loggedClient);
     const { user_id } = await db.readSession(state);
     const storedClient = await db.storeTwitterClient(loggedClient, user_id);
+    console.log("STORED TWOTTER CLIENT: ", storedClient);
     if (!storedClient)
         return res.json({ error: "failed to connect to twitter" });
     return res.redirect("/");
@@ -227,7 +228,7 @@ app.get("/user/tweets/:pagination", async (req, res) => {
     //return JSON
 });
 
-app.get("/", function (req, res) {
+app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
