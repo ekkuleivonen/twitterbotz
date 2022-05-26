@@ -188,6 +188,7 @@ const checkClientExpiry = async (interval, user_id) => {
     const expiredClient = await sql`SELECT * FROM twitter_clients
     WHERE (user_id =${user_id} AND
     updated_at < ${Date.now() - interval})`;
+    console.log(expiredClient);
     if (expiredClient[0]) return true;
     return false;
 };
