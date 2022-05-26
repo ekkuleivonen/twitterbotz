@@ -1,4 +1,5 @@
 {
+    "proxy": "http://localhost:30001",
     "main": "server.js",
     "name": "twitterbotz.v2",
     "version": "0.1.0",

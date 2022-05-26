@@ -49,6 +49,9 @@ function App({ user }) {
             //success
             if (foundTwitterClient.success) {
                 setDemo(false);
+                const { data } = await getDemoData();
+                setTwitterData(data);
+                //REPLACE ABOVE
                 //TODO: setTwitterData(getRealData());
                 setTwitterClient(foundTwitterClient.client);
             }
