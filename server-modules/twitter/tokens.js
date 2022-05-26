@@ -8,8 +8,13 @@ if (process.env.NODE_ENV === "production") {
     TWITTER_CLIENT_ID = require("../../secrets.json").TWITTER_CLIENT_ID;
     TWITTER_CLIENT_SECRET = require("../../secrets.json").TWITTER_CLIENT_SECRET;
 }
+let CALLBACK_URL;
+if (process.env.NODE_ENV === "production") {
+    CALLBACK_URL = "https://twitterbotz-v2.herokuapp.com/auth/twitter/callback";
+} else {
+    CALLBACK_URL = "http://www.localhost:3001/auth/twitter/callback";
+}
 
-const CALLBACK_URL = "http://www.localhost:3001/auth/twitter/callback";
 const client = new TwitterApi({
     clientId: TWITTER_CLIENT_ID,
     clientSecret: TWITTER_CLIENT_SECRET,
