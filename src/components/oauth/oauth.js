@@ -4,7 +4,7 @@ export default function Oauth({ setOauth }) {
     //FUNCTIONS
     const handleOauth = async (e) => {
         e.preventDefault();
-        window.location.replace("http://localhost:3001/auth/twitter");
+        window.location.replace("/auth/twitter");
     };
 
     const handleSkip = (e) => {
