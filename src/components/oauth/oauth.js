@@ -1,10 +1,17 @@
 import "./oauth.css";
+let authUrl;
+
+if (process.env.NODE_ENV === "production") {
+    authUrl = "/auth/twitter";
+} else {
+    authUrl = "http://localhost:3001/auth/twitter";
+}
 
 export default function Oauth({ setOauth }) {
     //FUNCTIONS
     const handleOauth = async (e) => {
         e.preventDefault();
-        window.location.replace("/auth/twitter");
+        window.location.replace(authUrl);
     };
 
     const handleSkip = (e) => {

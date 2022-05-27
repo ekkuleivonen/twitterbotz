@@ -4,13 +4,17 @@ const token = require("./server-modules/twitter/tokens.js");
 const cookieSession = require("cookie-session");
 const twitter = require("./server-modules/twitter/twitter-api.js");
 const { TwitterApi } = require("twitter-api-v2");
+const cron = require("node-cron");
 
 let COOKIE_SESSION_SIGNATURE;
+let HOME;
 if (process.env.NODE_ENV === "production") {
     COOKIE_SESSION_SIGNATURE = process.env.COOKIE_SESSION_SIGNATURE;
+    HOME = "https://twitterbotz-v2.herokuapp.com";
 } else {
     COOKIE_SESSION_SIGNATURE =
         require("./secrets.json").COOKIE_SESSION_SIGNATURE;
+    HOME = "http://localhost:3000/";
 }
 const express = require("express");
 const app = express();
@@ -115,21 +119,37 @@ app.get("/auth/twitter/callback", async (req, res) => {
     console.log("STORED TWITTER CLIENT: ", storedClient);
     if (!storedClient)
         return res.json({ error: "failed to connect to twitter" });
-    return res.redirect("/");
+    return res.redirect(HOME);
 });
-//TODO: token refresh
+//scheduled token refresh
+const updateTokens = async () => {
+    console.log("UPDATING TOKENS");
+    const expiringClients = await db.getExpiringClients(10); //minutes //900 seconds == 15 min // 3600 seconds = 1hour
+    if (expiringClients.length < 1)
+        return console.log("ALL CLIENTS UP TO DATE");
+    console.log(
+        `EXPIRING CLIENTS COUNT: ${expiringClients.length} --> REQUESTING TWITTER FOR NEW TOKENS...`
+    );
+    const updatedClients = await token.updateClients(expiringClients);
+    console.log("UPDATED CLIENTS COUNT: ", updatedClients.length);
+};
+
+cron.schedule("*/30 * * * *", updateTokens);
+
 //twitter client of user
 app.get("/api/twitter-client", async (req, res) => {
     const user_id = req.session.user_id;
     try {
         const foundTwitterClient = await db.getTwitterClientByUserId(user_id);
         //no client
-        if (!foundTwitterClient)
+        if (!foundTwitterClient) {
+            console.log("No Twitter client found");
             return res.json({
                 client: null,
                 error: "NO CLIENT",
                 success: false,
             });
+        }
         //client expired
         const clientHasExpired = await db.checkClientExpiry(7200, user_id);
         if (clientHasExpired) {

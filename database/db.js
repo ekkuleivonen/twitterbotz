@@ -192,7 +192,25 @@ const checkClientExpiry = async (interval, user_id) => {
     if (expiredClient[0]) return true;
     return false;
 };
-//updateClients()
+const getExpiringClients = async (interval) => {
+    //TODO: add 1h threshold for finding expiring clients...
+    try {
+        const expiringClients = await sql`SELECT * FROM twitter_clients`;
+        return expiringClients;
+    } catch (error) {
+        console.log(error);
+    }
+};
+const updateClient = async (user_id, access_token, refresh_token) => {
+    try {
+        await sql`UPDATE twitter_clients SET
+        access_token = ${access_token},
+        refresh_token = ${refresh_token}
+        WHERE user_id = ${user_id}`;
+    } catch (error) {
+        console.log(error);
+    }
+};
 const getTwitterClientByUserId = async (user_id) => {
     try {
         const twitterClient = await sql`
@@ -214,4 +232,6 @@ module.exports = {
     storeTwitterClient,
     checkClientExpiry,
     getTwitterStatsById,
+    getExpiringClients,
+    updateClient,
 };

@@ -1,4 +1,6 @@
+const e = require("express");
 const { TwitterApi } = require("twitter-api-v2");
+const db = require("../../database/db.js");
 let TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET;
 
 if (process.env.NODE_ENV === "production") {
@@ -93,4 +95,20 @@ module.exports.getAccessToken = async (
         .catch(() => {
             console.log("Invalid verifier or access tokens!");
         });
+};
+
+module.exports.updateClients = async (expiringClients) => {
+    try {
+        await expiringClients.forEach(async (cli) => {
+            setTimeout(async () => {
+                console.log("UPDATING: ", cli.twitter_username);
+                const { accessToken, refreshToken } =
+                    await client.refreshOAuth2Token(cli.refresh_token);
+                await db.updateClient(cli.user_id, accessToken, refreshToken);
+                console.log(cli.twitter_username, " UPDATED");
+            }, 2000);
+        });
+    } catch (error) {
+        console.log("PROBLEM WITH UPDATING TWITTER CLIENTS: ", error);
+    }
 };
