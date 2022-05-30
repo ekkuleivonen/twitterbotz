@@ -24,6 +24,7 @@ h2 {
     padding: 2em;
     border-radius: 0.5em;
     background-color: rgb(38, 40, 42);
+    position: relative;
 }
 
 .cell2 .PostTweet textarea {
@@ -59,4 +60,42 @@ h2 {
     color: rgba(255, 255, 255, 0.5);
     text-decoration: none;
     margin-right: 0.5em;
+}
+
+.time-select {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(3px);
+    border-radius: 0.5em;
+}
+
+.time-select #tweet_date {
+    margin: 1em;
+    min-height: 3em;
+    padding: 1em;
+    border-radius: 0.5em;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.time-select #tweet_time {
+    margin: 1em;
+    min-height: 2em;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h5 {
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 1em;
+    font-size: 1em;
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
 }

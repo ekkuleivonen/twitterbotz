@@ -44,7 +44,7 @@ CREATE TABLE twitter_clients (
 );
 --/////////////////////////////////////////////////////////////////////
 
---DEMO DATA
+--TWITTER-STATS
 --/////////////////////////////////////////////////////////////////////
 DROP TABLE IF EXISTS twitter_data;
 CREATE TABLE twitter_data (
@@ -67,4 +67,15 @@ CREATE TABLE twitter_data (
 INSERT INTO twitter_data (followers_d7, followers_d6, followers_d5, followers_d4, followers_d3, followers_d2, followers_d1, seven_day_retweets, seven_day_likes, seven_day_engagement, user_id) VALUES (405, 407, 411, 412, 409, 415, 419, 4, 24, 0.123, 1);
 INSERT INTO twitter_data (followers_d7, followers_d6, followers_d5, followers_d4, followers_d3, followers_d2, followers_d1, seven_day_retweets, seven_day_likes, seven_day_engagement, user_id) VALUES (3002, 3020, 3021, 3035, 3045, 3038, 3059, 22, 122, 0.082, 2);
 INSERT INTO twitter_data (followers_d7, followers_d6, followers_d5, followers_d4, followers_d3, followers_d2, followers_d1, seven_day_retweets, seven_day_likes, seven_day_engagement, user_id) VALUES (15209, 15250, 15288, 15290, 15240, 15303, 15320, 122, 4125, 0.075, 3);
+--/////////////////////////////////////////////////////////////////////
+
+--SCHEDULED TWEETS
+--/////////////////////////////////////////////////////////////////////
+DROP TABLE IF EXISTS scheduled_tweets;
+CREATE TABLE scheduled_tweets (
+     id SERIAL PRIMARY KEY,
+     payload TEXT,
+     user_id INTEGER NOT NULL REFERENCES users (id),
+     expires_at TIMESTAMP DEFAULT NOW()
+);
 --/////////////////////////////////////////////////////////////////////

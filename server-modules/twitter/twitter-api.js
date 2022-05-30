@@ -26,11 +26,15 @@ const getUserTimeLineById = async (twitter_id, access_token) => {
         const seven_day_profile_clicks = extractProfileClicks(seven_day_tweets);
         const seven_day_impressions = extractImpressions(seven_day_tweets);
         const seven_day_engagement =
-            (seven_day_likes +
-                seven_day_retweets +
-                seven_day_replies +
-                seven_day_profile_clicks) /
-            seven_day_impressions;
+            (
+                (seven_day_likes +
+                    seven_day_retweets +
+                    seven_day_replies +
+                    seven_day_profile_clicks) /
+                seven_day_impressions
+            ).toFixed(2) *
+                100 +
+            "%";
 
         const seven_day_stats = {
             seven_day_likes,
@@ -64,7 +68,15 @@ const updateFollowers = async (twitterclients) => {
     return twitterclients;
 };
 
-module.exports = { getUserTimeLineById, updateFollowers };
+const getLatestFollowers = async (client) => {
+    const appOnlyClient = new TwitterApi(client.access_token);
+    const { data } = await appOnlyClient.v2.user(client.twitter_id, {
+        "user.fields": ["public_metrics"],
+    });
+    return data.public_metrics.followers_count;
+};
+
+module.exports = { getUserTimeLineById, updateFollowers, getLatestFollowers };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 const extractLikes = (seven_day_tweets) => {

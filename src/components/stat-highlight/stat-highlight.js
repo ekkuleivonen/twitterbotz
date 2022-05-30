@@ -20,7 +20,7 @@ function StatHighlight({ twitterData, demo }) {
         <div className="StatHighlight">
             <div className="stat-cell">
                 <h2>FOLLOWERS</h2>
-                <h3>{twitterData.seven_day_followers[6]}</h3>
+                <h3>{twitterData.todays_followers}</h3>
             </div>
             <div className="stat-cell">
                 <h2>LIKES</h2>

@@ -5,13 +5,16 @@ import { useState } from "react";
 ////////////////////////////////////////////////////////////////////////////
 
 //FUNCTIONS
-import { tweetNow } from "../../client-functions/api.js";
+import { tweetLater, tweetNow } from "../../client-functions/api.js";
 ////////////////////////////////////////////////////////////////////////////
 
 function PostTweet({ setOauth, demo }) {
     //STATE
     let [error, setError] = useState(false);
     let [tweetBody, setTweetBody] = useState("");
+    let [tweetDate, setTweetDate] = useState(null);
+    let [tweetTime, setTweetTime] = useState(null);
+    let [showTimeSelector, setTimeSelector] = useState(false);
     ////////////////////////////////
 
     //FUNCTIONS
@@ -23,13 +26,20 @@ function PostTweet({ setOauth, demo }) {
         setTweetBody(userInput);
     };
     //Authorisized users can schedule tweets
-    const handleSchedule = async (e) => {
+    const openTimeSelector = (e) => {
         e.preventDefault();
         if (!tweetBody) return;
         if (error) return;
         //prompt user to authorize twitter
         if (demo) return setOauth(true);
+        setTimeSelector(true);
+    };
+
+    const handleSchedule = async (e) => {
         //TODO: ADD schedule support
+        e.preventDefault();
+        const storedTweet = await tweetLater(tweetBody, tweetDate, tweetTime);
+        console.log(storedTweet);
     };
     //Authorisized users can post tweets
     const handleTweet = async () => {
@@ -57,13 +67,36 @@ function PostTweet({ setOauth, demo }) {
                 className={error ? "error" : ""}
             />
             <div className="submit">
-                <a href="/" onClick={handleSchedule}>
+                <a href="/" onClick={openTimeSelector}>
                     Schedule
                 </a>
                 <h4 onClick={handleTweet} className={tweetBody ? "active" : ""}>
                     TWEET
                 </h4>
             </div>
+            {showTimeSelector && (
+                <div className="time-select">
+                    <input
+                        type="date"
+                        id="tweet_date"
+                        name="tweet_date"
+                        min={new Date()}
+                        required
+                        onChange={(e) => setTweetDate(e.target.value)}
+                    />
+                    <input
+                        type="time"
+                        id="tweet_time"
+                        name="tweet_time"
+                        required
+                        onChange={(e) => setTweetTime(e.target.value)}
+                    />
+                    <h4 onClick={handleSchedule} className="active">
+                        SCHEDULE
+                    </h4>
+                    <h5 onClick={() => setTimeSelector(false)}>Cancel</h5>
+                </div>
+            )}
         </form>
     );
 }

@@ -89,9 +89,17 @@ app._router.get("/api/me", async (req, res) => {
     };
     return res.json(user);
 });
+//current twitter client --- MARKED FOR DELETION
+// app.get("/api/my-twitter-info", async (req, res) => {
+//     const user_id = req.session.user_id;
+//     const { access_token } = await db.getTwitterClientByUserId(user_id);
+//     const appOnlyClient = new TwitterApi(access_token);
+//     const meUser = await appOnlyClient.v2.me();
+//     res.json(meUser);
+// });
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-//TWITTER CLIENT
+//TWITTER OAUTH
 //send user to twitter
 app.get("/auth/twitter", async (req, res) => {
     const user_id = req.session.user_id;
@@ -135,7 +143,6 @@ const updateTokens = async () => {
     console.log("UPDATED CLIENTS COUNT: ", updatedClients.length);
 };
 cron.schedule("*/30 * * * *", updateTokens);
-
 //twitter client of user
 app.get("/api/twitter-client", async (req, res) => {
     const user_id = req.session.user_id;
@@ -189,8 +196,11 @@ app.get("/api/real-twitter-data", async (req, res) => {
     //fetch tweet data
     const { seven_day_likes, seven_day_retweets, seven_day_engagement } =
         await twitter.getUserTimeLineById(twitter_id, access_token);
-
-    //fetch followers data
+    //get newest follower data
+    const twitterClient = await db.getTwitterClientByUserId(user_id);
+    const todays_followers = await twitter.getLatestFollowers(twitterClient);
+    console.log(todays_followers);
+    //fetch historic followers data
     const followersData = await db.getTwitterStatsById(user_id);
 
     res.json({
@@ -198,7 +208,14 @@ app.get("/api/real-twitter-data", async (req, res) => {
         seven_day_likes: seven_day_likes,
         seven_day_retweets: seven_day_retweets,
         seven_day_engagement: seven_day_engagement,
+        todays_followers: todays_followers,
     });
+});
+
+//upcoming events
+app.get("/api/scheduled-events", async (req, res) => {
+    const user_id = req.session.user.id;
+    //get scheduled tweets from db
 });
 
 const updateHistoricFollowerData = async () => {
@@ -210,16 +227,7 @@ const updateHistoricFollowerData = async () => {
 cron.schedule("0 0 0 * * *", updateHistoricFollowerData); //"0 0 0 * * *" = every midnight
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-//TWITTER API CALLS
-//myTwitterInfo
-app.get("/api/my-twitter-info", async (req, res) => {
-    const user_id = req.session.user_id;
-    const { access_token } = await db.getTwitterClientByUserId(user_id);
-    const appOnlyClient = new TwitterApi(access_token);
-    const meUser = await appOnlyClient.v2.me();
-    res.json(meUser);
-});
-
+//TWITTER API ACTIONS
 //tweet now
 app.post("/api/tweet-now", async (req, res) => {
     const user_id = req.session.user_id;
@@ -232,6 +240,33 @@ app.post("/api/tweet-now", async (req, res) => {
     console.log("Tweet", createdTweet.id, ":", createdTweet.text);
     res.json(createdTweet);
 });
+// tweet later
+app.post("/api/tweet-later", async (req, res) => {
+    // add tweet data and date to database
+    const user_id = req.session.user_id;
+    const { payload, delay } = req.body;
+    const scheduledTweet = await db.scheduleTweet(user_id, payload, delay);
+    console.log(scheduledTweet);
+});
+const uploadTweetsFromDB = async () => {
+    console.log("SEARCHING FOR TWEETS TO BE UPLOADED FROM DB");
+    //find expired tweets and access tokens from DB
+    const expiredTweets = await db.findExpiredTweets();
+    console.log("TWEETS EXPIRED: ", expiredTweets);
+    if (expiredTweets.length < 1)
+        return console.log("NO TWEETS TO BE UPLOADED");
+    //loop through found tweets
+    expiredTweets.forEach(async (tweet) => {
+        const appOnlyClient = new TwitterApi(tweet.access_token);
+        const { data: createdTweet } = await appOnlyClient.v2.tweet(
+            tweet.payload
+        );
+        console.log(createdTweet);
+        //remove tweet from db;
+    });
+    //for each tweet --> push to twitter
+};
+//cron.schedule("*/15 * * * * *", uploadTweetsFromDB); //"*/10 * * * *" = every 10min
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("*", function (req, res) {

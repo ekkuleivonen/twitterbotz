@@ -48,7 +48,28 @@ const tweetNow = async (tweetBody) => {
     return uploadedTweet;
 };
 
-export { registerUser, loginUser, getDemoData, getRealData, tweetNow };
+const tweetLater = async (tweetBody, tweetDate, tweetTime) => {
+    const response = await fetch("/api/tweet-later", {
+        method: "POST",
+        body: JSON.stringify({
+            tweetBody: tweetBody,
+            tweetDate: tweetDate,
+            tweetTime: tweetTime,
+        }),
+        headers: { "Content-Type": "application/json" },
+    });
+    const storedTweet = await response.json();
+    return storedTweet;
+};
+
+export {
+    registerUser,
+    loginUser,
+    getDemoData,
+    getRealData,
+    tweetNow,
+    tweetLater,
+};
 
 //     const rawServerResponse = await fetch("/register", {
 //         headers: { "Content-type": "application/json" },

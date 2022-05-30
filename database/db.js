@@ -140,7 +140,6 @@ const readSession = async (state) => {
         return err;
     }
 };
-
 const writeSession = async (state, codeVerifier, user_id) => {
     try {
         const writtenSession = await sql`
@@ -160,7 +159,6 @@ const writeSession = async (state, codeVerifier, user_id) => {
 
 //TOKENS
 //**************************************************************************
-//initiateClient(accessToken, user_id)
 const storeTwitterClient = async (loggedClient, user_id) => {
     try {
         const {
@@ -226,7 +224,9 @@ const getAllTwitterClients = async () => {
         await sql`SELECT * FROM twitter_clients WHERE NOT user_id=1 OR user_id=1 OR user_id=3`;
     return twitterClients;
 };
+//**************************************************************************
 
+//TWITTER ACTIONS
 const createTwitterDataRow = async (user_id) => {
     try {
         await sql`INSERT INTO twitter_data
@@ -238,7 +238,6 @@ const createTwitterDataRow = async (user_id) => {
         return "error";
     }
 };
-
 const updateFollowerData = async (client, new_followers) => {
     // shift historic follower data colums by one day (while adding the new data as the current)
     const result =
@@ -261,6 +260,25 @@ const updateFollowerData = async (client, new_followers) => {
     followers_d1 = ${new_followers} RETURNING *`;
     return new_data;
 };
+const findExpiredTweets = async () => {
+    const expiredTweets = await sql`SELECT * FROM  scheduled_tweets
+                                WHERE  expires_at < NOW()`;
+    return expiredTweets;
+};
+const scheduleTweet = async (user_id, payload, delay) => {
+    function dateWith(delay) {
+        const date = new Date();
+        date.setSeconds(date.getSeconds() + delay);
+        return date;
+    }
+    const scheduledTweet = await sql`INSERT INTO scheduled_tweets
+                                    (user_id, payload, expires_at)
+                                    VALUES (${user_id},
+                                    ${payload},
+                                    ${dateWith(delay)})
+                                    RETURNING *`;
+    return scheduledTweet;
+};
 //**************************************************************************
 module.exports = {
     createUser,
@@ -277,4 +295,6 @@ module.exports = {
     getAllTwitterClients,
     updateFollowerData,
     createTwitterDataRow,
+    scheduleTweet,
+    findExpiredTweets,
 };
