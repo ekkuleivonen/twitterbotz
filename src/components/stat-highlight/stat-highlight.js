@@ -23,12 +23,12 @@ function StatHighlight({ twitterData, demo }) {
                 <h3>{twitterData.seven_day_followers[6]}</h3>
             </div>
             <div className="stat-cell">
-                <h2>RETWEETS</h2>
-                <h3>{twitterData.seven_day_retweets}</h3>
+                <h2>LIKES</h2>
+                <h3>{twitterData.seven_day_likes}</h3>
             </div>
             <div className="stat-cell">
-                <h2>MENTIONS</h2>
-                <h3>{twitterData.seven_day_mentions}</h3>
+                <h2>RETWEETS</h2>
+                <h3>{twitterData.seven_day_retweets}</h3>
             </div>
             <div className="stat-cell">
                 <h2>ENGAGEMENT</h2>

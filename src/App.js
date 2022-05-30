@@ -32,9 +32,9 @@ function App({ user }) {
     //USE EFFECT
     ///////////////////////////////////////////////////
     useEffect(() => {
-        async function checkTwitterClient() {
-            const response = await fetch("api/twitter-client");
-            const foundTwitterClient = await response.json();
+        async function getData() {
+            const res1 = await fetch("api/twitter-client");
+            const foundTwitterClient = await res1.json();
             if (foundTwitterClient.error === "NO CLIENT") {
                 setDemo(true);
                 const { data } = await getDemoData();
@@ -46,17 +46,22 @@ function App({ user }) {
                 setTwitterData(data);
                 return setOauth(true);
             }
-            //success
             if (foundTwitterClient.success) {
                 setDemo(false);
                 const { data } = await getDemoData();
                 setTwitterData(data);
                 //REPLACE ABOVE
                 //TODO: setTwitterData(getRealData());
+                // const res2 = await fetch("api/real-twitter-data");
+                // const foundStats = await res2.json();
+                // console.log(foundStats);
+                const realData = await getRealData();
+                setTwitterData(realData);
+                console.log(realData);
                 setTwitterClient(foundTwitterClient.client);
             }
         }
-        checkTwitterClient();
+        getData();
     }, [user]);
     ///////////////////////////////////////////////////
 

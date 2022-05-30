@@ -52,6 +52,7 @@ app.post("/api/register", async (req, res) => {
     console.log("CLIENT INPUT FOR REGISTRATION: ", registerInput);
     try {
         const newUser = await db.createUser(registerInput);
+        await db.createTwitterDataRow(newUser[0].id);
         req.session.user_id = newUser[0].id;
         res.json({ success: true, error: null });
     } catch (error) {
@@ -133,7 +134,6 @@ const updateTokens = async () => {
     const updatedClients = await token.updateClients(expiringClients);
     console.log("UPDATED CLIENTS COUNT: ", updatedClients.length);
 };
-
 cron.schedule("*/30 * * * *", updateTokens);
 
 //twitter client of user
@@ -176,18 +176,41 @@ app.get("/api/twitter-client", async (req, res) => {
 //POPULATE APP WITH DATA
 //demo
 app.get("/api/demo-twitter-data", async (req, res) => {
-    const user_id = 2; //1, 2, and 3 are users
+    const user_id = 2; //1, 2, and 3 are test users
     const demoData = await db.getTwitterStatsById(user_id);
     return res.json({ error: null, success: true, data: demoData });
 });
 //real data
 app.get("/api/real-twitter-data", async (req, res) => {
-    // TODO: same as above  but with real user_id
+    const user_id = req.session.user_id;
+    const { access_token, twitter_id } = await db.getTwitterClientByUserId(
+        user_id
+    );
+    //fetch tweet data
+    const { seven_day_likes, seven_day_retweets, seven_day_engagement } =
+        await twitter.getUserTimeLineById(twitter_id, access_token);
+
+    //fetch followers data
+    const followersData = await db.getTwitterStatsById(user_id);
+
+    res.json({
+        ...followersData,
+        seven_day_likes: seven_day_likes,
+        seven_day_retweets: seven_day_retweets,
+        seven_day_engagement: seven_day_engagement,
+    });
 });
+
+const updateHistoricFollowerData = async () => {
+    console.log("UPDATING TWITTER STATS FOR AUTHENTICATED USERS...");
+    const twitterClients = await db.getAllTwitterClients();
+    const result = await twitter.updateFollowers(twitterClients);
+    console.log("results:", result);
+};
+cron.schedule("0 0 0 * * *", updateHistoricFollowerData); //"0 0 0 * * *" = every midnight
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //TWITTER API CALLS
-////////////////////////////////////////////////////////////////////////////////////////////
 //myTwitterInfo
 app.get("/api/my-twitter-info", async (req, res) => {
     const user_id = req.session.user_id;
@@ -195,17 +218,6 @@ app.get("/api/my-twitter-info", async (req, res) => {
     const appOnlyClient = new TwitterApi(access_token);
     const meUser = await appOnlyClient.v2.me();
     res.json(meUser);
-});
-
-//myFollowers
-app.get("/api/followers/:twitter_id", async (req, res) => {
-    const user_id = req.session.user_id;
-    const { access_token } = await db.getTwitterClientByUserId(user_id);
-    const twitter_id = req.params.twitter_id;
-    const appOnlyClient = new TwitterApi(access_token);
-    const myFollowers = await appOnlyClient.v2.followers(twitter_id);
-    console.log(myFollowers);
-    res.json(myFollowers);
 });
 
 //tweet now
@@ -220,33 +232,7 @@ app.post("/api/tweet-now", async (req, res) => {
     console.log("Tweet", createdTweet.id, ":", createdTweet.text);
     res.json(createdTweet);
 });
-
-//get tweets
-app.get("/user/tweets/:pagination", async (req, res) => {
-    const user_id = req.session.user_id;
-    //const pagination = req.params.pagination;
-
-    //get twitter client
-    const { twitter_id, access_token } = await db.getTwitterClientByUserId(
-        user_id
-    );
-    const appOnlyClient = new TwitterApi(access_token);
-    //get tweets from Twitter
-    const result = await twitter.getTweetsByTwitterId(twitter_id, access_token);
-    const tweetCollection = result._realData.data;
-    //add likes to tweet collection
-    for (let i = 0; i < tweetCollection.length; i++) {
-        const likes = await appOnlyClient.v2.tweetLikedBy(
-            tweetCollection[i].id
-        );
-        tweetCollection[i].likes = likes.meta.result_count;
-    }
-
-    res.json(tweetCollection);
-    //get future tweets from DB
-    //merge list based on date
-    //return JSON
-});
+////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));

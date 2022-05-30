@@ -83,7 +83,7 @@ const getTwitterStatsById = async (user_id) => {
             followers_d2,
             followers_d1,
             seven_day_retweets,
-            seven_day_mentions,
+            seven_day_likes,
             seven_day_engagement,
         } = twitterStats[0];
 
@@ -103,7 +103,7 @@ const getTwitterStatsById = async (user_id) => {
             dates,
             seven_day_followers,
             seven_day_retweets,
-            seven_day_mentions,
+            seven_day_likes,
             seven_day_engagement,
         };
         return twitterData;
@@ -221,6 +221,46 @@ const getTwitterClientByUserId = async (user_id) => {
         console.error(err);
     }
 };
+const getAllTwitterClients = async () => {
+    const twitterClients =
+        await sql`SELECT * FROM twitter_clients WHERE NOT user_id=1 OR user_id=1 OR user_id=3`;
+    return twitterClients;
+};
+
+const createTwitterDataRow = async (user_id) => {
+    try {
+        await sql`INSERT INTO twitter_data
+        (followers_d7, followers_d6, followers_d5, followers_d4, followers_d3, followers_d2, followers_d1,
+        seven_day_retweets, seven_day_likes, seven_day_engagement, user_id)
+        VALUES (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ${user_id})`;
+        return "success";
+    } catch (error) {
+        return "error";
+    }
+};
+
+const updateFollowerData = async (client, new_followers) => {
+    // shift historic follower data colums by one day (while adding the new data as the current)
+    const result =
+        await sql`SELECT * FROM twitter_data WHERE user_id = ${client.user_id}`;
+    const {
+        followers_d6,
+        followers_d5,
+        followers_d4,
+        followers_d3,
+        followers_d2,
+        followers_d1,
+    } = result[0];
+    const new_data = await sql`UPDATE twitter_data SET
+    followers_d7 = ${followers_d6},
+    followers_d6 = ${followers_d5},
+    followers_d5 = ${followers_d4},
+    followers_d4 = ${followers_d3},
+    followers_d3 = ${followers_d2},
+    followers_d2 = ${followers_d1},
+    followers_d1 = ${new_followers} RETURNING *`;
+    return new_data;
+};
 //**************************************************************************
 module.exports = {
     createUser,
@@ -234,4 +274,7 @@ module.exports = {
     getTwitterStatsById,
     getExpiringClients,
     updateClient,
+    getAllTwitterClients,
+    updateFollowerData,
+    createTwitterDataRow,
 };
