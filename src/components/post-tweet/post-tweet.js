@@ -13,7 +13,6 @@ function PostTweet({ setOauth, demo }) {
     let [error, setError] = useState(false);
     let [tweetBody, setTweetBody] = useState("");
     let [tweetDate, setTweetDate] = useState(null);
-    let [tweetTime, setTweetTime] = useState(null);
     let [showTimeSelector, setTimeSelector] = useState(false);
     ////////////////////////////////
 
@@ -24,6 +23,13 @@ function PostTweet({ setOauth, demo }) {
         if (userInput.length >= 280) setError(true);
         if (userInput.length <= 280) setError(false);
         setTweetBody(userInput);
+    };
+    const addTimetoDate = (e) => {
+        e.preventDefault();
+        const HOURS = e.target.value.split(":")[0];
+        const MINUTES = e.target.value.split(":")[1];
+        const dateAndTime = new Date(tweetDate).setHours(HOURS, MINUTES);
+        setTweetDate(new Date(dateAndTime).toISOString());
     };
     //Authorisized users can schedule tweets
     const openTimeSelector = (e) => {
@@ -38,8 +44,12 @@ function PostTweet({ setOauth, demo }) {
     const handleSchedule = async (e) => {
         //TODO: ADD schedule support
         e.preventDefault();
-        const storedTweet = await tweetLater(tweetBody, tweetDate, tweetTime);
+        console.log(new Date(tweetDate));
+        const storedTweet = await tweetLater(tweetBody, tweetDate);
         console.log(storedTweet);
+        setTimeSelector(false);
+        document.getElementById("tweet-body").value = "";
+        setTweetBody("");
     };
     //Authorisized users can post tweets
     const handleTweet = async () => {
@@ -82,14 +92,16 @@ function PostTweet({ setOauth, demo }) {
                         name="tweet_date"
                         min={new Date()}
                         required
-                        onChange={(e) => setTweetDate(e.target.value)}
+                        onChange={(e) =>
+                            setTweetDate(new Date(e.target.value).toUTCString())
+                        }
                     />
                     <input
                         type="time"
                         id="tweet_time"
                         name="tweet_time"
                         required
-                        onChange={(e) => setTweetTime(e.target.value)}
+                        onChange={addTimetoDate}
                     />
                     <h4 onClick={handleSchedule} className="active">
                         SCHEDULE

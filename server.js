@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === "production") {
     HOME = "http://localhost:3000/";
 }
 const express = require("express");
+const { dblClick } = require("@testing-library/user-event/dist/click");
 const app = express();
 
 //MIDDLEWARE
@@ -244,15 +245,20 @@ app.post("/api/tweet-now", async (req, res) => {
 app.post("/api/tweet-later", async (req, res) => {
     // add tweet data and date to database
     const user_id = req.session.user_id;
-    const { payload, delay } = req.body;
-    const scheduledTweet = await db.scheduleTweet(user_id, payload, delay);
+    const { tweetBody, tweetDate } = req.body;
+    const scheduledTweet = await db.scheduleTweet(
+        user_id,
+        tweetBody,
+        new Date(tweetDate)
+    );
     console.log(scheduledTweet);
+    res.json(scheduledTweet);
 });
 const uploadTweetsFromDB = async () => {
     console.log("SEARCHING FOR TWEETS TO BE UPLOADED FROM DB");
     //find expired tweets and access tokens from DB
     const expiredTweets = await db.findExpiredTweets();
-    console.log("TWEETS EXPIRED: ", expiredTweets);
+    console.log("TWEETS EXPIRED COUNT: ", expiredTweets.lenght);
     if (expiredTweets.length < 1)
         return console.log("NO TWEETS TO BE UPLOADED");
     //loop through found tweets
@@ -263,10 +269,11 @@ const uploadTweetsFromDB = async () => {
         );
         console.log(createdTweet);
         //remove tweet from db;
+        const removedTweet = await db.removeOldTweet(tweet.id);
+        console.log("OLD TWEET REMOVED: ", removedTweet);
     });
-    //for each tweet --> push to twitter
 };
-//cron.schedule("*/15 * * * * *", uploadTweetsFromDB); //"*/10 * * * *" = every 10min
+cron.schedule("*/10 * * * *", uploadTweetsFromDB); //"*/10 * * * *" = every 10min
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("*", function (req, res) {

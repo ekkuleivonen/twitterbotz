@@ -261,21 +261,29 @@ const updateFollowerData = async (client, new_followers) => {
     return new_data;
 };
 const findExpiredTweets = async () => {
-    const expiredTweets = await sql`SELECT * FROM  scheduled_tweets
+    try {
+        const expiredTweets =
+            await sql`SELECT payload, access_token, scheduled_tweets.id AS id
+                                FROM  scheduled_tweets
+                                JOIN twitter_clients
+                                ON scheduled_tweets.user_id = twitter_clients.user_id
                                 WHERE  expires_at < NOW()`;
-    return expiredTweets;
-};
-const scheduleTweet = async (user_id, payload, delay) => {
-    function dateWith(delay) {
-        const date = new Date();
-        date.setSeconds(date.getSeconds() + delay);
-        return date;
+        return expiredTweets;
+    } catch (error) {
+        console.log(error);
     }
+};
+const removeOldTweet = async (id) => {
+    const removedTweet =
+        await sql`DELETE FROM scheduled_tweets WHERE id = ${id} RETURNING *`;
+    return removedTweet;
+};
+const scheduleTweet = async (user_id, tweetBody, tweetDate) => {
     const scheduledTweet = await sql`INSERT INTO scheduled_tweets
                                     (user_id, payload, expires_at)
                                     VALUES (${user_id},
-                                    ${payload},
-                                    ${dateWith(delay)})
+                                    ${tweetBody},
+                                    ${tweetDate})
                                     RETURNING *`;
     return scheduledTweet;
 };
@@ -297,4 +305,5 @@ module.exports = {
     createTwitterDataRow,
     scheduleTweet,
     findExpiredTweets,
+    removeOldTweet,
 };

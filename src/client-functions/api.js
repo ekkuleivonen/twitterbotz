@@ -48,13 +48,13 @@ const tweetNow = async (tweetBody) => {
     return uploadedTweet;
 };
 
-const tweetLater = async (tweetBody, tweetDate, tweetTime) => {
+const tweetLater = async (tweetBody, tweetDate) => {
+    console.log("API SENDS: ", new Date(tweetDate));
     const response = await fetch("/api/tweet-later", {
         method: "POST",
         body: JSON.stringify({
             tweetBody: tweetBody,
-            tweetDate: tweetDate,
-            tweetTime: tweetTime,
+            tweetDate: new Date(tweetDate),
         }),
         headers: { "Content-Type": "application/json" },
     });
