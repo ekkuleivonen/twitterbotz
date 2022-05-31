@@ -2,7 +2,7 @@ import "./App.css";
 
 //PAGES
 import Home from "./pages/home/home.js";
-import Tweets from "./pages/tweets/tweets.js";
+import AiWriter from "./pages/ai-writer/ai-writer.js";
 import Analytics from "./pages/analytics/analytics.js";
 ////////////////////////////////////////////////////////////////
 
@@ -109,9 +109,9 @@ function App({ user }) {
                         ></Route>
                         <Route
                             exact
-                            path="/tweets"
+                            path="/ai-writer"
                             element={
-                                <Tweets
+                                <AiWriter
                                     user={user}
                                     twitterClient={twitterClient}
                                     demo={demo}

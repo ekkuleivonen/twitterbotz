@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./nav-bar.css";
 
 function NavBar({ user, twitterClient, demo }) {
@@ -24,7 +24,7 @@ function NavBar({ user, twitterClient, demo }) {
                         <Link to="/">HOME</Link>
                     </div>
                     <div className="tab">
-                        <Link to="/tweets">TWEETS</Link>
+                        <Link to="/ai-writer">AI WRITER</Link>
                     </div>
                     <div className="tab">
                         <Link to="/analytics">ANALYTICS</Link>

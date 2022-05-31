@@ -24,15 +24,15 @@ const promptTemplates = [
     "Inspire my <kw1> on my twitter account.",
 ];
 
-module.exports.autoTweet = async () => {
+module.exports.autoTweet = async (user_input) => {
     const response = await openai.createCompletion("text-davinci-002", {
-        prompt: "Inspire my horse girls on my twitter account.",
+        prompt: user_input,
         temperature: 0.75,
         max_tokens: 64,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
     });
-
     console.log("OPEN AI response: ", response.data);
+    return response.data.choices[0].text;
 };

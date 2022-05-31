@@ -1,0 +1,32 @@
+.component-ai-writer {
+    width: 100%;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.component-ai-writer .two-column-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 2em;
+}
+
+.component-ai-writer .two-column-grid .left-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.component-ai-writer .two-column-grid .right-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.component-ai-writer .two-column-grid .right-cell #tweet-area {
+    min-height: 300px;
+    min-width: 400px;
+    padding: 1em;
+    font-size: 1.25em;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}

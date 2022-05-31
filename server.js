@@ -263,13 +263,15 @@ cron.schedule("*/2 * * * *", uploadTweetsFromDB); //"*/2 * * * *" = every 2min
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //OPENAI
-const autotweeeeet = async () => {
+//generate tweet
+app.post("/api/ai-writer", async (req, res) => {
     const {
         autoTweet,
     } = require("./server-modules/openai/prompt-completion.js");
-    await autoTweet();
-};
-//cron.schedule("*/15 * * * * *", autotweeeeet);
+    const generatedTweet = await autoTweet(req.body.aiGeneration);
+    console.log(generatedTweet);
+    res.json({ success: true, data: generatedTweet });
+});
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("*", function (req, res) {
