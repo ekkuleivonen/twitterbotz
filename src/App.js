@@ -48,13 +48,7 @@ function App({ user }) {
             }
             if (foundTwitterClient.success) {
                 setDemo(false);
-                const { data } = await getDemoData();
-                setTwitterData(data);
-                //REPLACE ABOVE
-                //TODO: setTwitterData(getRealData());
-                // const res2 = await fetch("api/real-twitter-data");
-                // const foundStats = await res2.json();
-                // console.log(foundStats);
+                console.log("TWITTER CLIENT ACTIVE");
                 const realData = await getRealData();
                 setTwitterData(realData);
                 console.log(realData);

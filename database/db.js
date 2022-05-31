@@ -85,6 +85,7 @@ const getTwitterStatsById = async (user_id) => {
             seven_day_retweets,
             seven_day_likes,
             seven_day_engagement,
+            todays_followers,
         } = twitterStats[0];
 
         const seven_day_followers = [
@@ -105,6 +106,7 @@ const getTwitterStatsById = async (user_id) => {
             seven_day_retweets,
             seven_day_likes,
             seven_day_engagement,
+            todays_followers,
         };
         return twitterData;
     } catch (err) {
@@ -186,6 +188,7 @@ const checkClientExpiry = async (interval, user_id) => {
     const expiredClient = await sql`SELECT * FROM twitter_clients
     WHERE (user_id =${user_id} AND
     updated_at < ${Date.now() - interval})`;
+    console.log(expiredClient);
     if (expiredClient.length < 1) return false;
     if (expiredClient[0]) return true;
     return false;

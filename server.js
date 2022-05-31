@@ -90,15 +90,6 @@ app._router.get("/api/me", async (req, res) => {
     };
     return res.json(user);
 });
-//current twitter client --- MARKED FOR DELETION
-// app.get("/api/my-twitter-info", async (req, res) => {
-//     const user_id = req.session.user_id;
-//     const { access_token } = await db.getTwitterClientByUserId(user_id);
-//     const appOnlyClient = new TwitterApi(access_token);
-//     const meUser = await appOnlyClient.v2.me();
-//     res.json(meUser);
-// });
-////////////////////////////////////////////////////////////////////////////////////////////
 
 //TWITTER OAUTH
 //send user to twitter
@@ -143,7 +134,7 @@ const updateTokens = async () => {
     const updatedClients = await token.updateClients(expiringClients);
     console.log("UPDATED CLIENTS COUNT: ", updatedClients.length);
 };
-cron.schedule("*/30 * * * *", updateTokens);
+cron.schedule("*/30 * * * *", updateTokens); // "*/30 * * * *" --> every 30 min
 //twitter client of user
 app.get("/api/twitter-client", async (req, res) => {
     const user_id = req.session.user_id;
@@ -199,8 +190,9 @@ app.get("/api/real-twitter-data", async (req, res) => {
         await twitter.getUserTimeLineById(twitter_id, access_token);
     //get newest follower data
     const twitterClient = await db.getTwitterClientByUserId(user_id);
-    const todays_followers = await twitter.getLatestFollowers(twitterClient);
-    console.log(todays_followers);
+    const todays_real_followers = await twitter.getLatestFollowers(
+        twitterClient
+    );
     //fetch historic followers data
     const followersData = await db.getTwitterStatsById(user_id);
 
@@ -209,14 +201,8 @@ app.get("/api/real-twitter-data", async (req, res) => {
         seven_day_likes: seven_day_likes,
         seven_day_retweets: seven_day_retweets,
         seven_day_engagement: seven_day_engagement,
-        todays_followers: todays_followers,
+        todays_followers: todays_real_followers,
     });
-});
-
-//upcoming events
-app.get("/api/scheduled-events", async (req, res) => {
-    const user_id = req.session.user.id;
-    //get scheduled tweets from db
 });
 
 const updateHistoricFollowerData = async () => {
@@ -258,7 +244,7 @@ const uploadTweetsFromDB = async () => {
     console.log("SEARCHING FOR TWEETS TO BE UPLOADED FROM DB");
     //find expired tweets and access tokens from DB
     const expiredTweets = await db.findExpiredTweets();
-    console.log("TWEETS EXPIRED COUNT: ", expiredTweets.lenght);
+    console.log("TWEETS EXPIRED COUNT: ", expiredTweets.length);
     if (expiredTweets.length < 1)
         return console.log("NO TWEETS TO BE UPLOADED");
     //loop through found tweets
@@ -273,7 +259,7 @@ const uploadTweetsFromDB = async () => {
         console.log("OLD TWEET REMOVED: ", removedTweet);
     });
 };
-cron.schedule("*/10 * * * *", uploadTweetsFromDB); //"*/10 * * * *" = every 10min
+cron.schedule("*/2 * * * *", uploadTweetsFromDB); //"*/2 * * * *" = every 2min
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("*", function (req, res) {

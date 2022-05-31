@@ -14,16 +14,29 @@ const getUserTimeLineById = async (twitter_id, access_token) => {
                 "non_public_metrics",
             ],
         });
+        if (!data) {
+            const seven_day_stats = {
+                seven_day_likes: 0,
+                seven_day_retweets: 0,
+                seven_day_replies: 0,
+                seven_day_profile_clicks: 0,
+                seven_day_impressions: 0,
+                seven_day_engagement: "N/A",
+            };
+            return seven_day_stats;
+        }
         //calculate 7 -day stats from the tweet data
-        const seven_day_tweets = data.filter(
-            (tweet) =>
-                new Date(tweet.created_at) >
-                Date.now() - 7 * 24 * 60 * 60 * 1000
-        );
+        const seven_day_tweets =
+            data.filter(
+                (tweet) =>
+                    new Date(tweet.created_at) >
+                    Date.now() - 7 * 24 * 60 * 60 * 1000
+            ) || 0;
         const seven_day_likes = extractLikes(seven_day_tweets);
         const seven_day_retweets = extractRetweets(seven_day_tweets);
         const seven_day_replies = extractReplies(seven_day_tweets);
-        const seven_day_profile_clicks = extractProfileClicks(seven_day_tweets);
+        const seven_day_profile_clicks =
+            extractProfileClicks(seven_day_tweets) || 0;
         const seven_day_impressions = extractImpressions(seven_day_tweets);
         const seven_day_engagement =
             (
