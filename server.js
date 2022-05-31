@@ -262,6 +262,16 @@ const uploadTweetsFromDB = async () => {
 cron.schedule("*/2 * * * *", uploadTweetsFromDB); //"*/2 * * * *" = every 2min
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+//OPENAI
+const autotweeeeet = async () => {
+    const {
+        autoTweet,
+    } = require("./server-modules/openai/prompt-completion.js");
+    await autoTweet();
+};
+//cron.schedule("*/15 * * * * *", autotweeeeet);
+////////////////////////////////////////////////////////////////////////////////////////////
+
 app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
 });

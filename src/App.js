@@ -36,12 +36,14 @@ function App({ user }) {
             const res1 = await fetch("api/twitter-client");
             const foundTwitterClient = await res1.json();
             if (foundTwitterClient.error === "NO CLIENT") {
+                console.log("NO TWITTER CLIENT");
                 setDemo(true);
                 const { data } = await getDemoData();
                 setTwitterData(data);
                 return setOauth(true);
             }
             if (foundTwitterClient.error === "CLIENT EXPIRED") {
+                console.log("TWITTER CLIENT EXPIRED");
                 const { data } = await getDemoData();
                 setTwitterData(data);
                 return setOauth(true);

@@ -206,7 +206,8 @@ const updateClient = async (user_id, access_token, refresh_token) => {
     try {
         await sql`UPDATE twitter_clients SET
         access_token = ${access_token},
-        refresh_token = ${refresh_token}
+        refresh_token = ${refresh_token},
+        updated_at = ${new Date()}
         WHERE user_id = ${user_id}`;
     } catch (error) {
         console.log(error);
