@@ -3,7 +3,7 @@ import "./App.css";
 //PAGES
 import Home from "./pages/home/home.js";
 import AiWriter from "./pages/ai-writer/ai-writer.js";
-import Analytics from "./pages/analytics/analytics.js";
+import Automation from "./pages/Automation/Automation.js";
 ////////////////////////////////////////////////////////////////
 
 //COMPONENTS
@@ -97,9 +97,9 @@ function App({ user }) {
                         }
                         <Route
                             exact
-                            path="/analytics"
+                            path="/automation"
                             element={
-                                <Analytics
+                                <Automation
                                     user={user}
                                     twitterClient={twitterClient}
                                     demo={demo}

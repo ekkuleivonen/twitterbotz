@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Oauth from "../../components/oauth/oauth.js";
-import "./analytics.css";
+import "./Automation.css";
 
-function Analytics(currentUser, twitterClient, demo) {
+function Automation(currentUser, twitterClient, demo) {
     //STATE
     let [showOauth, setOauth] = useState(false);
     ///////////////////////////////////////////////////
@@ -15,11 +15,11 @@ function Analytics(currentUser, twitterClient, demo) {
 
     ///////////////////////////////////////////////////
     return (
-        <div className="component-analytics">
-            <h1>ANALYTICS</h1>
+        <div className="component-automation">
+            <h1>COMING SOON</h1>
             {showOauth && <Oauth />}
         </div>
     );
 }
 
-export default Analytics;
+export default Automation;

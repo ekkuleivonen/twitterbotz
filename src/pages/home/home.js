@@ -37,7 +37,8 @@ function Home({ twitterData, user, twitterClient, demo, setOauth }) {
                     <PostTweet setOauth={setOauth} demo={demo} />
                 </div>
                 <div className="cell cell3">
-                    <h2>HELLO</h2>
+                    <h2 id="coming-soon1">Coming soon:</h2>
+                    <h2 id="coming-soon2">Activity feed</h2>
                 </div>
             </div>
         </div>

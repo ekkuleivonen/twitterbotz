@@ -17,7 +17,6 @@ if (process.env.NODE_ENV === "production") {
     HOME = "http://localhost:3000/";
 }
 const express = require("express");
-const { dblClick } = require("@testing-library/user-event/dist/click");
 const app = express();
 
 //MIDDLEWARE

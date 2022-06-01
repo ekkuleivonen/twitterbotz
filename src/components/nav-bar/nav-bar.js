@@ -27,7 +27,7 @@ function NavBar({ user, twitterClient, demo }) {
                         <Link to="/ai-writer">AI WRITER</Link>
                     </div>
                     <div className="tab">
-                        <Link to="/analytics">ANALYTICS</Link>
+                        <Link to="/automation">AUTOMATION</Link>
                     </div>
                 </div>
                 <div className="user-controls">

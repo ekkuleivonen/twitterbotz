@@ -7,26 +7,136 @@
     align-items: center;
 }
 
-.component-ai-writer .two-column-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 2em;
-}
-
-.component-ai-writer .two-column-grid .left-cell {
+.component-ai-writer .wrapper {
     display: flex;
     flex-direction: column;
+    width: 50%;
+    max-width: 1200px;
 }
 
-.component-ai-writer .two-column-grid .right-cell {
+.component-ai-writer .wrapper .left-cell {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
 }
 
-.component-ai-writer .two-column-grid .right-cell #tweet-area {
-    min-height: 300px;
-    min-width: 400px;
+.left-cell h2 {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 1em;
+}
+
+.component-ai-writer .wrapper .left-cell #prompt {
+    appearance: none;
+    height: 75px;
+    width: 100%;
+    font-size: 1em;
+    font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", "sans-serif";
+    border: none;
+    border-radius: 0.5em;
     padding: 1em;
+    color: white;
+    background-color: rgb(44, 46, 48);
+    border: solid 1px rgba(57, 125, 162, 0.25);
+    letter-spacing: 0.025em;
+    outline: none;
+}
+
+.component-ai-writer .wrapper .left-cell #generate {
     font-size: 1.25em;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.component-ai-writer .wrapper .right-cell {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+}
+
+.typed-holder {
+    height: 300px;
+    width: 100%;
+    margin-top: 2em;
+    background-color: aliceblue;
+    overflow: hidden;
+    border-radius: 1em;
+    color: white;
+    background-color: rgb(44, 46, 48);
+    border: solid 1px rgba(57, 125, 162, 0.25);
+    position: relative;
+}
+
+.typed-holder img {
+    width: 5%;
+    opacity: 25%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+#waiting {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    opacity: 25%;
+    font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", "sans-serif";
+}
+
+.component-ai-writer .wrapper .right-cell #tweet-area {
+    outline: none;
+    border: none;
+    width: 100%;
+    min-height: 300px;
+    resize: none;
+    appearance: none;
+    font-size: 1em;
+    font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", "sans-serif";
+    letter-spacing: 0.025em;
+    padding: 1.5em;
+    color: white;
+    background-color: rgb(44, 46, 48);
+    border: solid 1px rgba(57, 125, 162, 0.25);
+    position: relative;
+    z-index: 1;
+}
+
+.time-select {
+    z-index: 50;
+}
+.submit-controls {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.submit-controls a {
+    margin-top: 0.75em;
+    font-size: 1.25em;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    margin-right: 0.5em;
+}
+
+h4 {
+    margin-top: 0.5em;
+    color: rgba(57, 125, 162, 0.5);
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+h4.active {
+    color: rgba(57, 125, 162, 1);
+    font-size: 1.5em;
 }
